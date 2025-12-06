@@ -1,21 +1,33 @@
 
+#!/usr/bin/env python
+
+# Hal.py The code is based on google-assistant-sdk's hotword.py
+# setup:
+#    create Python requirements : pip freeze > requirements.txt
+#    Install pip3 install -r requirements.txt
+
+# run:
+#    python3 hal.py
+
+from __future__ import print_function
 from gpiozero import LED 
 from pathlib import Path
 from time import sleep
 from signal import signal,SIGTERM,SIGHUP,pause
-import json
-import os
-import os.path
-import yaml
 from threading import Thread
-from __future__ import print_function
-import argparse
-import google.auth.transport.requests
-import google.oauth2.credentials
 from google.assistant.library import Assistant
 from google.assistant.library.event import EventType
 from google.assistant.library.file_helpers import existing_file
 from pixels import pixels
+
+import json
+import os
+import os.path
+import yaml
+import argparse
+import google.auth.transport.requests
+import google.oauth2.credentials
+
 import RPi.GPIO as GPIO
 import time
 
