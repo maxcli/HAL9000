@@ -13,7 +13,7 @@ import os.path
 import yaml
 import argparse
 from time import sleep
-
+from pathlib import Path
 #definitions
 BUTTON = 17
 redled= LED(13)
@@ -22,12 +22,10 @@ reading=True
 statusString="unknown"  
 
 #functions
-def button_handler():
-  
-    
+def button_handler():    
     global blink_on
     state = GPIO.input(BUTTON)
-    print("button handler.  blink flag:"+str(blink_on) +" state:"  state) 
+    print("button handler.  blink flag:"+str(blink_on) +" state:" +str( state)) 
     
     if blink_on:
         redled.off()
@@ -39,10 +37,13 @@ def button_handler():
 #main loop.  runs on schedule
 def main_daemon():
     while reading:
-        print('Wakeup  ' )
-  
- 
-        #print('Distance: ' +  '{:1.2f}'.format( distancesensor.distance) + " m") #speech . replace print with voice messaged      
+        print('Wakeup')
+
+        state = GPIO.input(BUTTON)
+
+        if state:
+            print("button pressed")
+
         sleep(5)
 
 
@@ -77,10 +78,10 @@ try:
     signal(SIGHUP, safe_exit)
 
     settingsDict =get_settings()
-    SS_SUBSCRIPTION_KEY=settingsDict["ss_SUBSCRIPTION_KEY"]
+    SS_SUBSCRIPTION_KEY=settingsDict["ss_key"]
     print("sub key"+ SS_SUBSCRIPTION_KEY)
     
-    button.when_pressed=button_handler
+    #BUTTON.when_pressed=button_handler
     startup()
 
 
@@ -92,5 +93,4 @@ try:
 
 finally:
     reading=False
-    distancesensor.close()
     pass
