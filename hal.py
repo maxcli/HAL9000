@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 # Hal.py
-
-import RPi.GPIO as GPIO
+#  
+# run program
+#    ./runhal.sh
+#
+import apa102
+import RPi.GPIO as GPIO  
 from gpiozero import LED 
 from signal import signal,SIGTERM,SIGHUP,pause
-import time
-import threading
 import json
 import os
 import os.path
@@ -14,6 +16,8 @@ import yaml
 import argparse
 from time import sleep
 from pathlib import Path
+from threading import Thread
+
 #definitions
 BUTTON = 17
 redled= LED(13)
@@ -42,9 +46,9 @@ def main_daemon():
         state = GPIO.input(BUTTON)
 
         if state:
-            print("button pressed")
-
-        sleep(5)
+            print("button off")
+        else:
+            print("button on")
 
 
 def get_settings():
@@ -66,9 +70,12 @@ def startup():
     redled.on()
     sleep(4)
    
+    print("red blink")
+    redled.blink(0.5,0.5)
+    sleep(4)
  
     redled.off()
-    sleep(4)
+
  
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(BUTTON, GPIO.IN)
