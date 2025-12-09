@@ -20,28 +20,20 @@ from threading import Thread
 
 #definitions
 BUTTON = 17
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(BUTTON, GPIO.IN)
 redled= LED(13)
 blink_on=False
 reading=True
 statusString="unknown"  
 
 #functions
-def button_handler():    
-    global blink_on
-    state = GPIO.input(BUTTON)
-    print("button handler.  blink flag:"+str(blink_on) +" state:" +str( state)) 
-    
-    if blink_on:
-        redled.off()
-    else:    
-        redled.blink(0.5,0.5)
 
-    blink_on=not blink_on
 
 #main loop.  runs on schedule
 def main_daemon():
     while reading:
-        print('Wakeup')
+        #print('Wakeup')
 
         state = GPIO.input(BUTTON)
 
@@ -49,6 +41,8 @@ def main_daemon():
             print("button off")
         else:
             print("button on")
+
+        sleep(2)
 
 
 def get_settings():
@@ -75,10 +69,7 @@ def startup():
     sleep(4)
  
     redled.off()
-
  
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(BUTTON, GPIO.IN)
 
 try:
     signal(SIGTERM, safe_exit)
