@@ -35,7 +35,8 @@ statusString="unknown"
 TESTWAV = r"/home/pi/test.wav"
 INTROWAV = r"voice_dataset/wavs/LJ0011.wav"
 
-
+PIXELS_N = 3
+strip= apa102.APA102(num_led=PIXELS_N)
 # 1. Force ALSA to use the plug interface before initializing PyAudio
 os.environ['PA_ALSA_PLUGHW'] = '1'
 
@@ -44,6 +45,15 @@ DEVICE_INDEX=1
 
 #functions
 
+def set_strip_color(r, g, b, brightness=31):
+    """Sets the entire strip to one color. Brightness is 0-31."""
+    for i in range(PIXELS_N ):
+        strip.set_pixel(i, r, g, b, brightness)
+    strip.show()
+
+def clear_strip():
+    """Turns all LEDs off."""
+    set_strip_color(0, 0, 0, 0)
 
 #main loop.  runs on schedule
 def main_daemon():
@@ -77,11 +87,10 @@ def showAudioDevice():
 
 def play_wav(wavename):
 
-    file_path = TESTWAV #r"/home/pi/test.wav"
     chunk = 1024  # Define the buffer size
-    print(f"Playing wav file  :  {file_path}")
+    print(f"Playing wav file  :  {wavename}")
     try:
-        wf = wave.open(str(file_path), 'rb')
+        wf = wave.open(str(wavename), 'rb')
         p = pyaudio.PyAudio()
         stream = p.open(format = p.get_format_from_width(wf.getsampwidth()),
                             channels = wf.getnchannels(),
@@ -104,7 +113,7 @@ def play_wav(wavename):
         p.terminate()
 
     except FileNotFoundError:
-        print(f"Error: The file {file_path} was not found.")
+        print(f"Error: The file {wavename} was not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -124,7 +133,18 @@ def safe_exit(signum,frame):
 
 def startup():
     showAudioDevice()
-    play_wav(INTROWAV)
+    #play_wav(INTROWAV )  # DOES NOT WORK. Match Device’s Native Sample Rate
+    play_wav(TESTWAV)   
+
+    print("Strip blue ")
+    set_strip_color(0, 0, 255, 5)
+    sleep(4)
+
+    print("Strip Green ")
+    set_strip_color(0, 255, 0, 10)
+    sleep(4)
+
+    clear_strip()
 
     print("red on")
     redled.on()
