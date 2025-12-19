@@ -6,4 +6,4 @@ create Python requirements : pip freeze > requirements.txt
   
 Install pip3 install -r requirements.txt
 
-Run: python3 hal.py
+Run: python3 ./hal.py
