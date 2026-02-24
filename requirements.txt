@@ -1,6 +1,3 @@
 spidev
 rpi.gpio
-pyaudio
 gpiozero
-pyaudio
-wave
